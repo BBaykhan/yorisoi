@@ -1,0 +1,9 @@
+# your account ARNs and family email - never commit
+agent/settings.json
+runtime-policy.json
+.env
+
+__pycache__/
+*.pyc
+.venv/
+.DS_Store
