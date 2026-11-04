@@ -7,6 +7,8 @@
   only fires if the dose was NOT confirmed. No Lambda needed.
 """
 import uuid
+import json
+import uuid
 from datetime import datetime, timedelta
 
 import boto3
@@ -44,16 +46,19 @@ def _create_escalation(item: dict, due_at: datetime) -> str | None:
         return None
     fire_at = max(due_at + timedelta(minutes=config.ESCALATION_MINUTES), now() + timedelta(minutes=1))
     message = (
-        "【見守りアラート / Watch alert】\n\n"
+        "【日本語】\n"
         f"{config.USER_NAME}が、お薬を飲んだ確認をまだしていません。\n\n"
         f"　お薬：{item['title']}\n"
         f"　予定：{due_at.month}月{due_at.day}日 {due_at:%H:%M}\n\n"
         "お電話などで、ご様子を確認してください。\n\n"
-        "----\n"
-        f"{config.USER_NAME} has not confirmed taking \"{item['title']}\" "
-        f"(scheduled {due_at:%b %d, %H:%M} JST). Please check on them.\n\n"
+        "【English】\n"
+        f"{config.USER_NAME} has not confirmed taking their medicine yet.\n\n"
+        f"  Medicine: {item['title']}\n"
+        f"  Scheduled: {due_at:%b %d, %H:%M} (JST)\n\n"
+        "Please give them a call or check on them.\n\n"
         "— よりそい / Yorisoi"
     )
+    subject = f"【よりそい】お薬の確認がありません / Dose not confirmed: {config.USER_NAME}"
     name = _schedule_name(item["reminder_id"])
     _scheduler.create_schedule(
         Name=name,
@@ -61,7 +66,16 @@ def _create_escalation(item: dict, due_at: datetime) -> str | None:
         ScheduleExpression=f"at({fire_at:%Y-%m-%dT%H:%M:%S})",
         ScheduleExpressionTimezone="Asia/Tokyo",
         FlexibleTimeWindow={"Mode": "OFF"},
-        Target={"Arn": config.SNS_TOPIC_ARN, "RoleArn": config.SCHEDULER_ROLE_ARN, "Input": message},
+        # Universal target: calls SNS Publish with our own Subject
+        # (the plain SNS target only sends a Message, so the subject would be "AWS Notification Message").
+        Target={
+            "Arn": "arn:aws:scheduler:::aws-sdk:sns:publish",
+            "RoleArn": config.SCHEDULER_ROLE_ARN,
+            "Input": json.dumps(
+                {"TopicArn": config.SNS_TOPIC_ARN, "Subject": subject[:99], "Message": message},
+                ensure_ascii=False,
+            ),
+        },
         ActionAfterCompletion="DELETE",
     )
     return name
@@ -144,7 +158,15 @@ def notify_family(message: str) -> str:
         return "family contact is not configured"
     _sns.publish(
         TopicArn=config.SNS_TOPIC_ARN,
-        Subject=f"よりそい：{config.USER_NAME}からのお知らせ",
-        Message=message,
+        Subject=f"【よりそい】{config.USER_NAME}からのお知らせ / Message from {config.USER_NAME}"[:99],
+        Message=(
+            "【日本語】\n"
+            f"{config.USER_NAME}から、よりそいを通じてお知らせです。\n\n"
+            f"{message}\n\n"
+            "【English】\n"
+            f"{config.USER_NAME} asked Yorisoi to send you this message (Japanese above).\n"
+            "Please give them a call when you can.\n\n"
+            "— よりそい / Yorisoi"
+        ),
     )
     return "sent"

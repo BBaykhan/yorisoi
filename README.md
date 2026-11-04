@@ -35,7 +35,7 @@ flowchart LR
 
 **Missed-dose alert without Lambda:** when a medicine reminder is created, the agent also creates a one-time EventBridge Scheduler schedule at *due time + N minutes* whose target is SNS directly. When the user confirms the dose, the schedule is deleted. The alert therefore fires **only if the dose was not confirmed**, with no polling and no extra compute.
 
-**Why the model reads photos instead of Textract:** Amazon Textract does not support Japanese text, so the photo goes straight to Claude on Bedrock, which can also *explain* what it read.
+**Why the model reads photos directly:** Amazon Textract can read Japanese (via `AnalyzeDocument` Layout or async text detection), but it returns raw text. Sending the photo straight to Claude on Bedrock reads *and* explains it in one call, and lets the agent suggest reminders.
 
 | Strands feature | Where |
 |---|---|

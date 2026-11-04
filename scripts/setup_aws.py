@@ -54,6 +54,7 @@ def main():
 
     # 2. SNS topic + email subscription
     topic_arn = sns.create_topic(Name="yorisoi-family-alerts")["TopicArn"]
+    sns.set_topic_attributes(TopicArn=topic_arn, AttributeName="DisplayName", AttributeValue="Yorisoi Care Alerts")
     subs = sns.list_subscriptions_by_topic(TopicArn=topic_arn)["Subscriptions"]
     if not any(s["Endpoint"] == a.email for s in subs):
         sns.subscribe(TopicArn=topic_arn, Protocol="email", Endpoint=a.email)

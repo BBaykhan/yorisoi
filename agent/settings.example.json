@@ -1,9 +1,0 @@
-{
-  "aws_region": "us-east-1",
-  "table_name": "yorisoi-reminders",
-  "sns_topic_arn": "arn:aws:sns:us-east-1:123456789012:yorisoi-family-alerts",
-  "scheduler_role_arn": "arn:aws:iam::123456789012:role/yorisoi-scheduler-role",
-  "user_name": "田中さん",
-  "escalation_minutes": 2,
-  "agent_runtime_arn": ""
-}
