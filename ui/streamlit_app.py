@@ -122,6 +122,17 @@ st.subheader("これからの予定")
 upcoming = store.list_reminders()
 if not upcoming:
     st.write("まだありません。")
-for r in upcoming:
+
+
+def show_reminder(r):
     icon = "💊" if r["kind"] == "medicine" else ("🏥" if r["kind"] == "appointment" else "📌")
     st.write(f"{icon} {fmt_time(r['due_at'])}　{r['title']}")
+
+
+SHOW_FIRST = 5
+for r in upcoming[:SHOW_FIRST]:
+    show_reminder(r)
+if len(upcoming) > SHOW_FIRST:
+    with st.expander(f"もっと見る（あと{len(upcoming) - SHOW_FIRST}件）"):
+        for r in upcoming[SHOW_FIRST:]:
+            show_reminder(r)
