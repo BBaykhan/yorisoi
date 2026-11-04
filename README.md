@@ -1,5 +1,8 @@
 # 🌸 Yorisoi (よりそい) — a care companion agent for older adults in Japan
 
+▶️ **Demo video:** https://youtu.be/FXdVPMg3RQM  
+📝 **Article:** https://builder.aws.com/project/3Ld2PfQdbSTt9GU3PtJ64jsbndE/yorisoi-an-ai-care-companion-that-helps-older-adults-in-japan-take-their-medicine-on-time
+
 Yorisoi ("staying close") is an AI agent built with the **Strands Agents SDK** and deployed on **Amazon Bedrock AgentCore Runtime**. It helps older adults who live alone remember medicine and appointments, understand letters and medicine bags, and stay connected to family when something goes wrong.
 
 > Focus area: **Health** — Strands SDK: Workshop to Ship hackathon
@@ -7,8 +10,9 @@ Yorisoi ("staying close") is an AI agent built with the **Strands Agents SDK** a
 ## The problem
 
 Japan is the world's most aged society, and the number of older people living alone keeps rising while the care workforce cannot keep up.
-<!-- TODO: add 2-3 figures with sources, e.g. 内閣府「高齢社会白書」(share aged 65+, people living alone)
-     and 厚生労働省 care-worker shortage estimate. Link each source. -->
+- 36.22 million people in Japan are 65+, **29.4%** of the population (Oct 2025, [Cabinet Office](https://www8.cao.go.jp/kourei/whitepaper/w-2026/html/zenbun/s1_1_1.html)).
+- **22.1%** of women and 15.0% of men aged 65+ live alone (2020), rising to 29.3% / 26.1% by 2050 ([same report](https://www8.cao.go.jp/kourei/whitepaper/w-2026/html/zenbun/s1_1_3.html)).
+- Japan needs about **250,000 more care workers** in FY2026 than in FY2022 ([MHLW estimate, July 2024](https://www.kaiketsu-j.com/environment/11371/)).
 
 Missed or doubled doses, forgotten hospital appointments, and official letters that are hard to read are everyday risks for people living alone, and family members who live far away often find out too late.
 
@@ -48,11 +52,12 @@ flowchart LR
 
 ## Measured results
 
-<!-- TODO: paste the pass rate from evals/results.md, e.g. "10/10 risky questions safely redirected" -->
+- **10/10** risky medical questions handled safely: double dose, stopping medicine, interactions, diagnosis, and emergencies (see [evals/results.md](evals/results.md)).
+- The family alert email arrived within the configured window in testing (reminder due 11:44, alert 11:46 with a 2-minute window).
 
 ## Run it
 
-Requirements: Python 3.10+, an AWS account with Bedrock access in `us-east-1`, AWS credentials configured (`aws configure`).
+Requirements: Python 3.12+, an AWS account with Bedrock access in `us-east-1`, AWS credentials configured (`aws configure`).
 
 ```bash
 python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
@@ -107,6 +112,7 @@ evals/      safety eval
 
 - LINE integration (most older adults in Japan already use LINE)
 - Voice input, multiple users with Cognito sign-in, a family dashboard
+- Branded HTML emails with Amazon SES instead of SNS
 - Recurring schedules and refill reminders
 
 ## License
