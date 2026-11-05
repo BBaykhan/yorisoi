@@ -1,7 +1,7 @@
 # 🌸 Yorisoi (よりそい) — a care companion agent for older adults in Japan
 
-▶️ **Demo video:** https://youtu.be/FXdVPMg3RQM  
-📝 **Article:** https://builder.aws.com/project/3Ld2PfQdbSTt9GU3PtJ64jsbndE/yorisoi-an-ai-care-companion-that-helps-older-adults-in-japan-take-their-medicine-on-time
+▶️ [Watch the demo video](https://youtu.be/FXdVPMg3RQM)  
+📝 [Read the article on AWS Builder Center](https://builder.aws.com/project/3Ld2PfQdbSTt9GU3PtJ64jsbndE/yorisoi-an-ai-care-companion-that-helps-older-adults-in-japan-take-their-medicine-on-time)
 
 Yorisoi ("staying close") is an AI agent built with the **Strands Agents SDK** and deployed on **Amazon Bedrock AgentCore Runtime**. It helps older adults who live alone remember medicine and appointments, understand letters and medicine bags, and stay connected to family when something goes wrong.
 
