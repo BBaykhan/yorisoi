@@ -64,7 +64,7 @@ python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\act
 pip install -r requirements.txt
 
 # 1. Create DynamoDB table, SNS topic, Scheduler role. Then confirm the email AWS sends.
-python scripts/setup_aws.py --email family@example.com --escalation-minutes 2
+python scripts/setup_aws.py --email family@example.com --escalation-minutes 10
 
 # 2. Try the agent in the terminal
 python scripts/chat.py
